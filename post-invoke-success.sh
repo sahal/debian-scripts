@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# a script to run after a successful dpkg/or apt update
-# see documentation for "DPkg::Post-Invoke-Success"
+# a script to run after a successful dpkg run
+# see documentation for "post-invoke" in dpkg config
 # by sahal
 
 set -o errexit
@@ -8,13 +8,13 @@ set -o nounset
 set -o pipefail
 #set -o xtrace
 
-#REBOOT_REQUIRED_FILE="/var/run/reboot-required"
-REBOOT_REQUIRED_FILE="${PWD}/reboot-required"
-
 # Using this output file, so a non-root user can run
 # the script standalone (i.e. outside of the Post-Invoke-Success process)
-#CHECK_RESTART_FILE="/var/run/check-restart-output"
+# Also used for testing
+REBOOT_REQUIRED_FILE="${PWD}/reboot-required"
 CHECK_RESTART_FILE="${PWD}/check-restart-output"
+#CHECK_RESTART_FILE="/var/run/check-restart-output"
+#REBOOT_REQUIRED_FILE="/var/run/reboot-required"
 
 send_msg() {
   # send_msg - use a third party messging service API to send an alert to my phone
