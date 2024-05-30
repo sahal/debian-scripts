@@ -11,16 +11,19 @@ set -o pipefail
 # Using this output file, so a non-root user can run
 # the script standalone (i.e. outside of the Post-Invoke-Success process)
 # Also used for testing
-REBOOT_REQUIRED_FILE="${PWD}/reboot-required"
-CHECK_RESTART_FILE="${PWD}/check-restart-output"
+REBOOT_REQUIRED_FILE="${PWD}/test/reboot-required"
+CHECK_RESTART_FILE="${PWD}/test/check-restart-output-required"
 #CHECK_RESTART_FILE="/var/run/check-restart-output"
 #REBOOT_REQUIRED_FILE="/var/run/reboot-required"
+
+SERVER_NAME="$(hostname)"
 
 send_msg() {
   # send_msg - use a third party messging service API to send an alert to my phone
   # I don't want to setup outgoing email on servers (for abuse reasons)
 
   local msg="${1:-unset}"
+  local data_body
 
   if [[ ${msg} == "service_restart" ]]; then
     echo "One or more services need to be restarted."
@@ -32,6 +35,15 @@ send_msg() {
   fi
 
   # do something with the msg brah
+  data_body=$(jq --null-input \
+    --arg msg_api_deviceid="${MSG_API_DEVICEID}" \
+    --arg msg="${msg}" \
+    --arg server_name="${SERVER_NAME}" \
+    '{"device_uuid": $msg_api_deviceid, "title": "$server_name - $msg" }')
+  echo curl -X POST "${MSG_API_ENDPOINT}" \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer ${MSG_API_TOKEN}" \
+    -d "${data_body}"
 }
 
 # checkrestart is a script provided by package: debian-goodies
