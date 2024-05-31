@@ -11,4 +11,4 @@ administration and this repo is the result of that.
 
 # License
 
-GPL v2+
+GPL v3+
