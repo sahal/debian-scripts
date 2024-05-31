@@ -25,7 +25,7 @@ EOF
 
 ## Run this script afterwards
 
-*****Process to be determined**
+**Process to be determined**
 
 I suggest you run this out of sync with `unattended-upgrades` until I figure out a more efficient way to do this. Otherwise, you'll be getting more alerts than you know what to do with.
 
