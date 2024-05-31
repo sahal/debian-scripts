@@ -16,7 +16,8 @@ CHECK_RESTART_FILE="${PWD}/test/check-restart-output-required"
 #CHECK_RESTART_FILE="/var/run/check-restart-output"
 #REBOOT_REQUIRED_FILE="/var/run/reboot-required"
 
-SERVER_NAME="$(hostname)"
+# secrets loaded via source
+source SOURCEDENVVARS
 
 send_msg() {
   # send_msg - use a third party messging service API to send an alert to my phone
@@ -35,15 +36,19 @@ send_msg() {
   fi
 
   # do something with the msg brah
-  data_body=$(jq --null-input \
-    --arg msg_api_deviceid="${MSG_API_DEVICEID}" \
-    --arg msg="${msg}" \
-    --arg server_name="${SERVER_NAME}" \
-    '{"device_uuid": $msg_api_deviceid, "title": "$server_name - $msg" }')
-  echo curl -X POST "${MSG_API_ENDPOINT}" \
+  data_body=$(cat << EOBODY
+    { "device_uuid": "${MSG_API_DEVICEID}",
+    "title": "${SERVER_NAME} - ${msg}",
+    "notification_type": 0
+  }
+EOBODY
+)
+
+  curl -X POST \
     -H "Content-Type: application/json" \
     -H "Authorization: Bearer ${MSG_API_TOKEN}" \
-    -d "${data_body}"
+    -d "$(tr -d '\n' <<< "${data_body}"| tr -s ' ')" \
+    "${MSG_API_ENDPOINT}"
 }
 
 # checkrestart is a script provided by package: debian-goodies

@@ -1,0 +1,4 @@
+MSG_API_ENDPOINT="https://cloudnotify.co.uk/api/v1/request"
+MSG_API_TOKEN=""
+MSG_API_DEVICEID=""
+SERVER_NAME=""
