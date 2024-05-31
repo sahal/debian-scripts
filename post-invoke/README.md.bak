@@ -31,9 +31,9 @@ I suggest you run this out of sync with `unattended-upgrades` until I figure out
 
 # Background
 
-DPkg is invoked on Debian and Debian derivatives after something is installed or configured (among other things).
+DPkg is invoked on Debian and Debian derivatives after something is instaled or configured (among other things).
 
 I've decided to run checkrestart, a script that checks to see if any services need to be restarted to take advantage of updated libraries, etc.
 
-This will undoubtedly be run more than once every time unattended upgrades runs successfully.
+This will undoubtly be run more than once every time unattended upgrades runs successfully.
 
